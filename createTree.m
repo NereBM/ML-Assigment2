@@ -1,3 +1,16 @@
+%{
+%   Input:  Matrix of features, vector of labels.
+%   Output: Struct containing decision tree with the format:
+%
+%   tree {
+%       op        :: String, index of attribute tested.
+%       attribute :: Number, index of attribute tested.
+%       threshold :: Number, used to split data.
+%       class     :: Number, 1 or 0.
+%       kids      :: Cell array of length 2 containing subtrees.
+%  }
+%}
+
 function tree = createTree(features, labels)
     if sum(labels(1)==labels)==length(labels)
         tree.class = labels(1);
@@ -7,7 +20,7 @@ function tree = createTree(features, labels)
             CHOOSE_ATTRIBUTE(features, labels);
         
         % Save feature evaluated in node for draw function.
-        tree.op = tree.attribute;
+        tree.op = int2str(tree.attribute);
                
         % Divide data in to two sets based on tree.attribute and
         % tree.threshold.       
