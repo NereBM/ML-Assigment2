@@ -1,6 +1,6 @@
 %{
-%   Input:  Matrix of features, vector of labels.
-%   Output: Struct containing decision tree with the format:
+%   Input:  Matrix of features, vector of corresponding labels.
+%   Output: Struct containing decision tree with format:
 %
 %   tree {
 %       op        :: String, index of attribute tested.
@@ -12,6 +12,7 @@
 %}
 
 function tree = createTree(features, labels)
+
     if sum(labels(1)==labels)==length(labels)
         tree.class = labels(1);
     else 
@@ -33,13 +34,13 @@ function tree = createTree(features, labels)
         rightChildLabels = labels( ...
             features(:, tree.attribute) >= tree.threshold);
 
-        if size(leftChildFeatures,1) == 0
+        if size(leftChildFeatures, 1) == 0
             tree.class = majorityVote(leftChildLabels);
         else
             tree.kids{1} = createTree(leftChildFeatures,leftChildLabels);
         end
         
-        if size(rightChildFeatures,1) == 0
+        if size(rightChildFeatures, 1) == 0
             tree.class = majorityVote(rightChildLabels);
         else
             tree.kids{2} = createTree(rightChildFeatures,rightChildLabels);
