@@ -4,6 +4,8 @@
 %}
 
 function class = majorityVote(labels)
+    
+    % Calculating majority like this will handle length(labels) == 0.
     if sum(labels == 0) >= sum(labels == 1)
         class = 0;
     else
