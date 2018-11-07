@@ -14,25 +14,28 @@
 function tree = createTree(features, labels)
 
     if sum(labels(1)==labels)==length(labels)
+        % Create empty kids cell array and empty string op for draw
+        % function.
+        tree.kids = {};
+        tree.op = '';
         tree.class = labels(1);
     else 
         % Function to select best attribute and threshold to split data.
         [tree.attribute, tree.threshold] = ...
-            CHOOSE_ATTRIBUTE(features, labels);
+            CHOOSE_ATTRIBUTE(features);
         
         % Save feature evaluated in node for draw function.
         tree.op = int2str(tree.attribute);
                
-        % Divide data in to two sets based on tree.attribute and
-        % tree.threshold.       
-        leftChildFeatures = features( ...
-            features(:, tree.attribute) < tree.threshold);
-        leftChildLabels = labels( ...
-            features(:, tree.attribute) < tree.threshold);
-        rightChildFeatures = features( ...
-            features(:, tree.attribute) >= tree.threshold);
-        rightChildLabels = labels( ...
-            features(:, tree.attribute) >= tree.threshold);
+        % Divide data in two sets based on attribute and threshold.
+        leftChildFeatures = ...
+            features(features(:, tree.attribute) < tree.threshold);
+        leftChildLabels = ...
+            labels(features(:, tree.attribute) < tree.threshold);
+        rightChildFeatures = ...
+            features(features(:, tree.attribute) >= tree.threshold);
+        rightChildLabels = ...
+            labels(features(:, tree.attribute) >= tree.threshold);
 
         if size(leftChildFeatures, 1) == 0
             tree.class = majorityVote(leftChildLabels);
