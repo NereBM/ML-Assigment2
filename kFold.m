@@ -57,11 +57,12 @@ end
 
 function f1Score = calcF1Score(predicted, actual)
     
-    % true positive ,false positive and false negative.
+    % true positive, false positive and false negative.
     tp = 0;
     fp = 0;
     fn = 0;
 
+    % Count true positives, false positives and false negatives.
     for i = 1:length(predicted)
         if predicted(i) == actual(i)
             tp = tp + 1;
