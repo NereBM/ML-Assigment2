@@ -14,6 +14,8 @@
 function tree = createTree(features, labels)
     tree.kids = {};
     tree.op = '';
+    
+    % This doesn't make sense. If features is empty, labels will be too.
     if isempty(features)
         tree.class = majorityVote(labels);
     elseif sum(labels(1) == labels) == length(labels)
@@ -22,8 +24,6 @@ function tree = createTree(features, labels)
         % Function to select best attribute and threshold to split data.
         [tree.attribute, tree.threshold] = ...
             chooseAttribute(features, labels);
-        
-        % Save feature evaluated in node for draw function.
         tree.op = int2str(tree.attribute);
                
         % Divide data in two sets based on attribute and threshold.
