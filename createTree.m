@@ -17,13 +17,13 @@ function tree = createTree(features, labels)
     
     % This doesn't make sense. If features is empty, labels will be too.
     if isempty(features)
-        tree.class = majorityVote(labels);
+        tree.class = -1; %majorityVote(labels);
     elseif sum(labels(1) == labels) == length(labels)
         tree.class = labels(1);
     else 
         % Function to select best attribute and threshold to split data.
         [tree.attribute, tree.threshold] = ...
-            choose_attributes(features, labels);
+            choose_attributes(features, transpose(labels));
         tree.op = int2str(tree.attribute);
                
         % Divide data in two sets based on attribute and threshold.
