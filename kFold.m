@@ -1,14 +1,20 @@
 %{
 %   Input:  Matrix of features, vector of corresponding labels.
-%   Output: Vector of F1 scores,
+%   Output: Cell array of structs with format:
+%
+%   struct {
+%       recall :: Number, true positive / true positive + false negative
+%       precision :: Number, true positive / true positive + false positive
+%       f1Score :: Number, 2 * precision * recall / precision + recall
+%   }
 %}
 
-function f1Scores = kFold(features, labels)
+function data = kFold(features, labels)
 
     % Change k to alter number of folds
     k = 10;
     cv = cvpartition(size(features, 1), 'kfold', k);
-    f1Scores = zeros(cv.NumTestSets, 1);
+    data = cell(cv.NumTestSets, 1);
     for i = 1: cv.NumTestSets
         % Create tree from training data.
         tree = createTree(transpose(features(cv.training(i), :)), ...
@@ -17,7 +23,11 @@ function f1Scores = kFold(features, labels)
         % Classify test data using tree.
         predicted = classify(features(cv.test(i), :), tree);
         
-        f1Scores(i) = calcF1Score(predicted, labels(cv.test(i)));
+    
+        % Save data in struct
+        [data{i}.recall, data{i}.precision] = ...
+            calcRecallPrecision(predicted, labels(cv.test(i)));
+        data{i}.f1Score = calcF1Score(data{i}.recall, data{i}.precision);
         % DrawDecisionTree(root);
         % pause
     end
@@ -52,10 +62,10 @@ end
 %{
 %   Input:  Vectors containing predicted and actual labels for binary
 %           classification problem.
-%   Output: F1 score calculated from input vectors.
+%   Output: Recall and precision values.
 %}
 
-function f1Score = calcF1Score(predicted, actual)
+function [recall, precision] = calcRecallPrecision(predicted, actual)
     
     % true positive, false positive and false negative.
     tp = 0;
@@ -75,5 +85,14 @@ function f1Score = calcF1Score(predicted, actual)
     
     precision = tp / (tp + fp);
     recall    = tp / (tp + fn);
+end
+
+
+%{
+%   Input:  Recall and precision values.
+%   Output: F1 score.
+%}
+
+function f1Score = calcF1Score(recall, precision)
     f1Score = 2 * ((precision * recall) / (precision + recall));
 end
