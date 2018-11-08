@@ -28,7 +28,9 @@ function data = kFold(features, labels)
         [data{i}.recall, data{i}.precision] = ...
             calcRecallPrecision(predicted, labels(cv.test(i)));
         data{i}.f1Score = calcF1Score(data{i}.recall, data{i}.precision);
-        % DrawDecisionTree(root);
+        
+        % Uncomment below to view tree.
+        % DrawDecisionTree(tree);
         % pause
     end
 end
