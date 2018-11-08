@@ -12,40 +12,45 @@
 %}
 
 function tree = createTree(features, labels)
-
-    if sum(labels(1)==labels)==length(labels)
-        % Need to create kids and op for draw function.
-        tree.kids = {};
-        tree.op = '';
+    tree.kids = {};
+    tree.op = '';
+    if isempty(features)
+        tree.class = majorityVote(labels);
+    elseif sum(labels(1) == labels) == length(labels)
         tree.class = labels(1);
     else 
         % Function to select best attribute and threshold to split data.
         [tree.attribute, tree.threshold] = ...
-            tempFunc(features);
+            chooseAttribute(features, labels);
         
         % Save feature evaluated in node for draw function.
         tree.op = int2str(tree.attribute);
                
         % Divide data in two sets based on attribute and threshold.
-        leftChildFeatures = ...
-            features(features(:, tree.attribute) < tree.threshold, :);
-        leftChildLabels = ...
-            labels(features(:, tree.attribute) < tree.threshold, :);
-        rightChildFeatures = ...
-            features(features(:, tree.attribute) >= tree.threshold, :);
-        rightChildLabels = ...
-            labels(features(:, tree.attribute) >= tree.threshold, :);
-
-        if size(leftChildFeatures, 1) == 0
-            tree.class = majorityVote(leftChildLabels);
-        else
-            tree.kids{1} = createTree(leftChildFeatures,leftChildLabels);
-        end
+        lIndices = features(:, tree.attribute) < tree.threshold;     
+        leftChildFeatures = features(:, lIndices);
+        leftChildLabels = labels(lIndices);
         
-        if size(rightChildFeatures, 1) == 0
-            tree.class = majorityVote(rightChildLabels);
-        else
-            tree.kids{2} = createTree(rightChildFeatures,rightChildLabels);
-        end
+        rIndices = features(:, tree.attribute) >= tree.threshold;
+        rightChildFeatures = features(:, rIndices);
+        rightChildLabels = labels(rIndices);
+        
+        tree.kids{1} = createTree(leftChildFeatures, leftChildLabels);
+        tree.kids{2} = createTree(rightChildFeatures, rightChildLabels);
+    end
+end
+
+%{
+%   Input:  Vector containing binary data.
+%   Output: Modal value from input vector.
+%}
+
+function class = majorityVote(labels)
+    
+    % Calculating majority like this will handle length(labels) == 0.
+    if sum(labels == 0) >= sum(labels == 1)
+        class = 0;
+    else
+        class = 1;
     end
 end
