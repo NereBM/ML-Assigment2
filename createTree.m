@@ -7,7 +7,7 @@
 %       attribute :: Number, index of attribute tested.
 %       threshold :: Number, used to split data.
 %       class     :: Number, 1 or 0.
-%       kids      :: Cell array of length 2 containing subtrees.
+%       kids      :: Cell array of length 2 containing subtrees as structs.
 %  }
 %}
 
@@ -27,11 +27,11 @@ function tree = createTree(features, labels)
         tree.op = int2str(tree.attribute);
                
         % Divide data in two sets based on attribute and threshold.
-        lIndices = features(:, tree.attribute) < tree.threshold;     
+        lIndices = features(tree.attribute, :) < tree.threshold;     
         leftChildFeatures = features(:, lIndices);
         leftChildLabels = labels(lIndices);
         
-        rIndices = features(:, tree.attribute) >= tree.threshold;
+        rIndices = features(tree.attribute, :) >= tree.threshold;
         rightChildFeatures = features(:, rIndices);
         rightChildLabels = labels(rIndices);
         
