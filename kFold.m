@@ -48,7 +48,7 @@ function predicted = classify(features, tree)
         node = tree;
         x = (features(i, :));
         
-        % Traverse tree until leaf node then set.
+        % Traverse tree until leaf node then set class to leaf node class.
         while ~isempty(node.kids)
             if x(node.attribute) < node.threshold
                 node = node.kids{1};
