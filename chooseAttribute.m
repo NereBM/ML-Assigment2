@@ -28,6 +28,8 @@ function [best_attribute, best_threshold] = chooseAttribute(X, y)
         [~, m] = max(threshold_infGain(:, 2));
         thresholds(i, :) = threshold_infGain(m, :);
     end
+    
+    % Return threshold and attribute with highest inf gain.
     [~, best_attribute] = max(thresholds(:, 2));
     best_threshold = thresholds(best_attribute, 1);
 end
