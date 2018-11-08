@@ -1,16 +1,12 @@
 %{
-load('facialPoints.mat');
-load('labels.mat');
-points = reshape(points, [132, 150]);
-
-[feature,threshold, threshold_index,gain] = choose_attribute(points,labels);
-disp("feature: " + feature)
-disp("threshold: " + threshold)
-disp("threshold_index: " + threshold_index)
-disp("gain: "+ gain)
+%   Input:  Matrix of features, vector of corresponding labels.
+%
+%   Output: The best attribute, as measured using the ID3 algorithm as
+%            well as the corresponding threshold which splits the data.
+%
 %}
 
-function [best_feature,best_threshold,threshold_index,gain] = choose_attribute(features,targets)
+function [best_feature,best_threshold] = choose_attribute(features,targets)
     targets_copy = transpose(targets);
         
     p = sum(targets_copy==1);   % Stores total number of ps
