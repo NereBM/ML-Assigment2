@@ -6,6 +6,7 @@
 %       recall :: Number, true positive / true positive + false negative
 %       precision :: Number, true positive / true positive + false positive
 %       f1Score :: Number, 2 * precision * recall / precision + recall
+%       tree :: Struct containing tree
 %   }
 %}
 
@@ -28,7 +29,7 @@ function data = kFold(features, labels)
         [data{i}.recall, data{i}.precision] = ...
             calcRecallPrecision(predicted, labels(cv.test(i)));
         data{i}.f1Score = calcF1Score(data{i}.recall, data{i}.precision);
-        
+        data{i}.tree = tree;
         % Uncomment below to view tree.
         % DrawDecisionTree(tree);
         % pause

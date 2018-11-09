@@ -8,10 +8,14 @@
 %       threshold :: Number, used to split data.
 %       class     :: Number, 1 or 0.
 %       kids      :: Cell array of length 2 containing subtrees as structs.
+%       features  :: Matrix, features at node.
+%       labels    :: Vector, labels at node.
 %  }
 %}
 
 function tree = createTree(features, labels)
+    tree.features = features;
+    tree.labels = labels;
     tree.kids = {};
     tree.op = '';
     
