@@ -14,4 +14,15 @@ labels = transpose(labels);
 % ===========================================================
 
 data = kFold(points, labels);
+% Print recall, precision and f1 score per fold.
 formatPrintData(data);
+
+% ===========================================================
+% Draw tree and/or draw tree with entropy values.
+% for i = 1:length(data)
+%    DrawDecisionTree(data{i}.tree);
+%    entropyTree = relabelTree(data{i}.tree);
+%    DrawDecisionTree(entropyTree);
+%    pause
+% end
+% ===========================================================
