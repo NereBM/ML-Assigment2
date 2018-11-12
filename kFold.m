@@ -46,7 +46,7 @@ function predicted = classify(features, tree)
     predicted = zeros(size(features, 2), 1);
     for i = 1: size(features, 2)
         node = tree;
-        x = (features(:, i));
+        x = features(:, i);
         
         % Traverse tree until leaf node then set class to leaf node class.
         while ~isempty(node.kids)
@@ -76,7 +76,7 @@ function [recall, precision] = calcRecallPrecision(predicted, actual)
 
     % Count true positives, false positives and false negatives.
     for i = 1:length(predicted)
-        if predicted(i) == actual(i)
+        if predicted(i) == 1 && actual(i) == 1
             tp = tp + 1;
         elseif predicted(i) == 1 && actual(i) == 0
             fp = fp + 1;
