@@ -8,20 +8,18 @@
 %       threshold :: Number, used to split data.
 %       class     :: Number, 1 or 0.
 %       kids      :: Cell array of length 2 containing subtrees as structs.
-%       features  :: Matrix, features at node.
-%       labels    :: Vector, labels at node.
+%       entropy   :: Number, entropy value at node.
 %  }
 %}
 
 function tree = createTree(features, labels)
-    tree.features = features;
-    tree.labels = labels;
+    tree.entropy = calcEntropy(labels);
     tree.kids = {};
     tree.op = '';
     
     % This doesn't make sense. If features is empty, labels will be too.
     if isempty(features)
-        tree.class = -1; %majorityVote(labels);
+        tree.class = majorityVote(labels);
     elseif sum(labels(1) == labels) == length(labels)
         tree.class = labels(1);
     else 
@@ -31,16 +29,11 @@ function tree = createTree(features, labels)
         tree.op = int2str(tree.attribute);
                
         % Divide data in two sets based on attribute and threshold.
-        lIndices = features(tree.attribute, :) < tree.threshold;     
-        leftChildFeatures = features(:, lIndices);
-        leftChildLabels = labels(lIndices);
-        
+        lIndices = features(tree.attribute, :) < tree.threshold;
         rIndices = features(tree.attribute, :) >= tree.threshold;
-        rightChildFeatures = features(:, rIndices);
-        rightChildLabels = labels(rIndices);
         
-        tree.kids{1} = createTree(leftChildFeatures, leftChildLabels);
-        tree.kids{2} = createTree(rightChildFeatures, rightChildLabels);
+        tree.kids{1} = createTree(features(:, lIndices), labels(lIndices));
+        tree.kids{2} = createTree(features(:, rIndices), labels(rIndices));
     end
 end
 
@@ -57,4 +50,14 @@ function class = majorityVote(labels)
     else
         class = 1;
     end
+end
+
+
+% If labels are all the same, will return NaN
+function entropy = calcEntropy(y)
+    p = sum(y == y(1));
+    
+    n = length(y) - p;
+    entropy = -((p / (p + n)) * log2(p / (p + n))) ...
+        - ((n / (n + p)) * log2(n / (n + p)));
 end

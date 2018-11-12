@@ -23,7 +23,6 @@ function data = kFold(features, labels)
         
         % Classify test data using tree.
         predicted = classify(features(cv.test(i), :), tree);
-        
     
         % Save data in struct
         [data{i}.recall, data{i}.precision] = ...
