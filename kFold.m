@@ -14,15 +14,15 @@ function data = kFold(features, labels)
 
     % Change k to alter number of folds
     k = 10;
-    cv = cvpartition(size(features, 1), 'kfold', k);
+    cv = cvpartition(size(features, 2), 'kfold', k);
     data = cell(cv.NumTestSets, 1);
     for i = 1: cv.NumTestSets
         % Create tree from training data.
-        tree = createTree(transpose(features(cv.training(i), :)), ...
+        tree = createTree(features(:, cv.training(i)), ...
             labels(cv.training(i)));
         
         % Classify test data using tree.
-        predicted = classify(features(cv.test(i), :), tree);
+        predicted = classify(features(:, cv.test(i)), tree);
     
         % Save data in struct
         [data{i}.recall, data{i}.precision] = ...
@@ -43,10 +43,10 @@ end
 
 function predicted = classify(features, tree)
     
-    predicted = zeros(size(features, 1), 1);
-    for i = 1: size(features, 1)
+    predicted = zeros(size(features, 2), 1);
+    for i = 1: size(features, 2)
         node = tree;
-        x = (features(i, :));
+        x = (features(:, i));
         
         % Traverse tree until leaf node then set class to leaf node class.
         while ~isempty(node.kids)
